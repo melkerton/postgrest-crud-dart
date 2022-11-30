@@ -9,26 +9,7 @@ typedef HttpHeader = Map<String, String>;
 
 enum HttpMethod { delete, get, head, patch, post, put }
 
-extension HttpMethodToString on HttpMethod {
-  String get value {
-    switch (this) {
-      case HttpMethod.delete:
-        return "delete";
-      case HttpMethod.get:
-        return "get";
-      case HttpMethod.head:
-        return "head";
-      case HttpMethod.patch:
-        return "patch";
-      case HttpMethod.post:
-        return "post";
-      case HttpMethod.put:
-        return "put";
-    }
-  }
-}
-
-// used in ModelService
+// used in Model
 extension HttpResponseDecoder on StreamedResponse {
   Future<List<JsonObject>> get jsonObject async {
     var data = json.decode(await stream.bytesToString());

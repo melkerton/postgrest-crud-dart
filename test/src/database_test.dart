@@ -18,7 +18,7 @@ void main() {
 
   test('DatabaseDelete', () async {
     testDatabase.httpClient = testMockClient(preResponse: (Request request) {
-      expect(request.method, equals(HttpMethod.delete.value));
+      expect(request.method, equals(HttpMethod.delete.name));
       expect(request.url, equals(Uri.parse("http://localhost/todo?id=eq.1")));
 
       expect(request.headers.containsKey('Content-Profile'), true);
@@ -30,7 +30,7 @@ void main() {
 
   test('DatabaseGet', () async {
     testDatabase.httpClient = testMockClient(preResponse: (Request request) {
-      expect(request.method, equals(HttpMethod.get.value));
+      expect(request.method, equals(HttpMethod.get.name));
       expect(request.url, equals(Uri.parse("http://localhost/todo?id=eq.1")));
 
       expect(request.headers.containsKey('Accept-Profile'), true);
@@ -42,7 +42,7 @@ void main() {
 
   test('DatabaseHead', () async {
     testDatabase.httpClient = testMockClient(preResponse: (Request request) {
-      expect(request.method, equals(HttpMethod.head.value));
+      expect(request.method, equals(HttpMethod.head.name));
       expect(request.url, equals(Uri.parse("http://localhost/todo")));
 
       expect(request.headers.containsKey('Accept-Profile'), true);
@@ -54,7 +54,7 @@ void main() {
 
   test('DatabasePatch', () async {
     testDatabase.httpClient = testMockClient(preResponse: (Request request) {
-      expect(request.method, equals(HttpMethod.patch.value));
+      expect(request.method, equals(HttpMethod.patch.name));
       expect(request.url, equals(Uri.parse("http://localhost/todo")));
 
       expect(request.headers.containsKey('Content-Profile'), true);
@@ -68,7 +68,7 @@ void main() {
 
   test('DatabasePost', () async {
     testDatabase.httpClient = testMockClient(preResponse: (Request request) {
-      expect(request.method, equals(HttpMethod.post.value));
+      expect(request.method, equals(HttpMethod.post.name));
       expect(request.url, equals(Uri.parse("http://localhost/todo")));
 
       expect(request.headers.containsKey('Content-Profile'), true);
@@ -82,7 +82,7 @@ void main() {
 
   test('DatabasePut', () async {
     testDatabase.httpClient = testMockClient(preResponse: (Request request) {
-      expect(request.method, equals(HttpMethod.put.value));
+      expect(request.method, equals(HttpMethod.put.name));
       expect(request.url, equals(Uri.parse("http://localhost/todo")));
 
       expect(request.headers.containsKey('Content-Profile'), true);

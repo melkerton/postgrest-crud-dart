@@ -1,6 +1,6 @@
 name: postgrest_crud
 description: Interface to Postgrest API.
-version: 0.1.0-dev.1
+version: 0.1.2-dev.1
 homepage: https://github.com/KernlAnnik/postgrest-crud-dart
 
 environment:

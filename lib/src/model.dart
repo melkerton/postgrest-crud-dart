@@ -2,44 +2,49 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:postgrest_crud/postgrest_crud.dart';
 
+/// Handles Model interactions with Database.
 abstract class Model<T> {
+  /// Postgrest URL table slug. e.g. http://example.com/MODEL-NAME/
   String get modelName;
+
+  /// Primary Key field of model table.
   String get primaryKey;
-  Database database;
+  final Database database;
+
+  /// Holds the last response from Database.
   http.StreamedResponse? response;
 
   // converters
   JsonObject toJson(T model);
   T fromJson(JsonObject jsonObject);
 
-  // commom prefer
-  final PostgrestPrefer preferRepresentation = {'return': 'representation'};
+  // common prefer
+  final PostgrestPrefer _preferRepresentation =
+      PostgrestPrefer(returnValue: 'representation');
 
   // constructors
   Model({required this.database});
 
   // crud operations
   Future<Response<T>> create(T model) async {
-    final body = payloadAsString(model);
+    final body = _payloadAsString(model);
     final response = await database.post(
-        modelName: modelName, prefer: preferRepresentation, body: body);
-    final models = await responseToModels(response);
-    return Response<T>(response: response, models: models);
+        modelName: modelName, prefer: _preferRepresentation, body: body);
+    return _buildResponse(response);
   }
 
   Future<Response<T>> createBatch(List<T> modelList) async {
-    final body = payloadAsString(modelList);
+    final body = _payloadAsString(modelList);
     final response = await database.post(
-        modelName: modelName, prefer: preferRepresentation, body: body);
-    final models = await responseToModels(response);
-    return Response<T>(response: response, models: models);
+        modelName: modelName, prefer: _preferRepresentation, body: body);
+    return _buildResponse(response);
   }
 
   Future<Response<T>> recall({Query? query}) async {
-    final PostgrestPrefer prefer = {'count': 'exact'};
-    final response = await database.get(modelName: modelName, prefer: prefer);
-    final models = await responseToModels(response);
-    return Response<T>(response: response, models: models);
+    final PostgrestPrefer prefer = PostgrestPrefer(countValue: 'exact');
+    final response =
+        await database.get(modelName: modelName, query: query, prefer: prefer);
+    return _buildResponse(response);
   }
 
   Future<Response<T>> update(T model) async {
@@ -47,15 +52,14 @@ abstract class Model<T> {
     assert(jsonObject.containsKey(primaryKey),
         "PrimaryKey `$primaryKey` not found in model!");
 
-    final body = payloadAsString(jsonObject);
+    final body = _payloadAsString(jsonObject);
     final query = Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
     final response = await database.put(
         modelName: modelName,
         body: body,
         query: query,
-        prefer: preferRepresentation);
-    final models = await responseToModels(response);
-    return Response<T>(response: response, models: models);
+        prefer: _preferRepresentation);
+    return _buildResponse(response);
   }
 
   void updateBatch(List<T> models) {
@@ -71,15 +75,19 @@ abstract class Model<T> {
 
     final query = Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
     final response = await database.delete(
-        modelName: modelName, query: query, prefer: preferRepresentation);
-    final models = await responseToModels(response);
-    return Response<T>(response: response, models: models);
+        modelName: modelName, query: query, prefer: _preferRepresentation);
+    return _buildResponse(response);
   }
 
   void deleteBatch(List<int> idSet) {}
 
+  Future<Response<T>> _buildResponse(http.StreamedResponse response) async {
+    final models = await _responseToModels(response);
+    return Response<T>(response: response, models: models);
+  }
+
   // helpers
-  String payloadAsString(dynamic payload) {
+  String _payloadAsString(dynamic payload) {
     if (payload is JsonObject || payload is List<JsonObject>) {
       return json.encode(payload);
     } else if (payload is T) {
@@ -91,7 +99,7 @@ abstract class Model<T> {
     }
   }
 
-  Future<List<T>> responseToModels(http.StreamedResponse response) async {
+  Future<List<T>> _responseToModels(http.StreamedResponse response) async {
     this.response = response;
     List<T> list = [];
     final jsonList = await response.jsonObject;

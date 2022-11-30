@@ -1,9 +1,10 @@
 class Query {
-  String? queryString;
+  final String? queryString;
 
   Query(this.queryString);
 
-  String render() {
+  @override
+  String toString() {
     if (queryString != null) return queryString!;
     return "";
   }

@@ -3,8 +3,9 @@ import 'dart:core';
 import 'package:http/http.dart';
 import 'package:postgrest_crud/postgrest_crud.dart';
 
+/// Handles direct interaction with Postgrest API.
 class Database {
-  PostgrestConfig postgrestConfig;
+  final PostgrestConfig postgrestConfig;
   Client httpClient = Client();
 
   // constructor
@@ -93,9 +94,9 @@ class Database {
     // build request
     var url = "${postgrestConfig.url}/$modelName";
     if (query != null) {
-      url = "$url${query.render()}";
+      url = "$url${query.toString()}";
     }
-    var request = Request(method.value, Uri.parse(url));
+    var request = Request(method.name, Uri.parse(url));
 
     //[Accept|Content]-Profile
     if ([HttpMethod.get, HttpMethod.head].contains(method)) {
@@ -106,7 +107,7 @@ class Database {
 
     // Prefer
     if (prefer != null) {
-      request.headers['Prefer'] = prefer.render();
+      request.headers['Prefer'] = prefer.toString();
     }
 
     // auth
