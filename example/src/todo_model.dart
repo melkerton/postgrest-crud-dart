@@ -2,7 +2,9 @@ import 'package:postgrest_crud/postgrest_crud.dart';
 
 class Todo {
   int? id;
-  Todo({this.id});
+  String item;
+  String? details;
+  Todo({this.id, required this.item, this.details});
 }
 
 class TodoModel extends Model<Todo> {
@@ -16,7 +18,10 @@ class TodoModel extends Model<Todo> {
 
   @override
   Todo fromJson(JsonObject json) {
-    return Todo(id: json['id']);
+    return Todo(
+        id: json['id'],
+        item: json['item'] ?? "MissingItem",
+        details: json['details']);
   }
 
   @override
@@ -25,6 +30,9 @@ class TodoModel extends Model<Todo> {
     if (model.id != null) {
       jsonObject['id'] = model.id;
     }
+    jsonObject['item'] = model.item;
+    jsonObject['details'] = model.details;
+
     return jsonObject;
   }
 }

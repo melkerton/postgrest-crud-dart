@@ -12,7 +12,7 @@ abstract class Model<T> {
   final Database database;
 
   /// Holds the last response from Database.
-  http.StreamedResponse? response;
+  http.StreamedResponse? lastResponse;
 
   // converters
   JsonObject toJson(T model);
@@ -62,7 +62,7 @@ abstract class Model<T> {
     return _buildResponse(response);
   }
 
-  // upsert
+  /// Performs an upsert with resolution=ignore-duplicates
   Future<Response<T>> updateBatch(List<T> models) async {
     final body = _payloadAsString(models);
     PostgrestPrefer prefer =
@@ -72,12 +72,17 @@ abstract class Model<T> {
     return _buildResponse(response);
   }
 
-  Future<Response<T>> updatePartial(JsonObject jsonObject) async {
+  /// Updates a model from a partial JsonObject representation.
+  /// Checks for primaryKey in jsonObject or requires a Query
+  Future<Response<T>> updatePartial(JsonObject jsonObject,
+      {Query? query}) async {
     final body = _payloadAsString(jsonObject);
-    assert(jsonObject.containsKey(primaryKey),
-        "PrimaryKey `$primaryKey` not found in model!");
+    if (query != null) {
+      assert(jsonObject.containsKey(primaryKey),
+          "PrimaryKey `$primaryKey` not found in model!");
+    }
 
-    final query = Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
+    query = query ?? Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
     final response = await database.patch(
         modelName: modelName,
         body: body,
@@ -106,6 +111,12 @@ abstract class Model<T> {
   }
 
   Future<Response<T>> _buildResponse(http.StreamedResponse response) async {
+    if (response.statusCode < 200 || response.statusCode > 299) {
+      throw PostgrestCrudException(
+          "${response.reasonPhrase} (${response.statusCode})",
+          response: response);
+    }
+
     final models = await _responseToModels(response);
     return Response<T>(response: response, models: models);
   }
@@ -124,7 +135,7 @@ abstract class Model<T> {
   }
 
   Future<List<T>> _responseToModels(http.StreamedResponse response) async {
-    this.response = response;
+    lastResponse = response;
     List<T> list = [];
     final jsonList = await response.jsonObject;
 

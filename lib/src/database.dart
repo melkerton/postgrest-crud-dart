@@ -116,8 +116,11 @@ class Database {
           "Bearer ${postgrestConfig.bearerToken}";
     }
 
+    // application
+
     // body
     if (body != null) {
+      request.headers['Content-Type'] = 'application/json';
       request.body = body;
     }
 

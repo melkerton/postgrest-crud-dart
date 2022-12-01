@@ -1,0 +1,3 @@
+postgrest:
+    url: http://localhost
+    schema: my_schema
