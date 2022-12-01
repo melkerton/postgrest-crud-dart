@@ -1,3 +1,8 @@
+## 0.1.3-dev.1
+
+-   Added example with testing.
+-   Improve documentation
+
 ## 0.1.2-dev.1
 
 -   Completed Database, Model, Query system.

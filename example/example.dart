@@ -27,4 +27,9 @@ void main() async {
   for (final model in response.models) {
     print('${model.id}\t${model.item}\t\t${model.details ?? "No details"}');
   }
+
+  // close httpClient when finished all requests
+  // simply closes the http.Client
+  // otherwise http.Client will hang until Keep-Alive? timeout triggers
+  database.close();
 }

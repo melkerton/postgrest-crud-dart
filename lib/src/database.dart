@@ -11,6 +11,10 @@ class Database {
   // constructor
   Database({required this.postgrestConfig});
 
+  void close() {
+    httpClient.close();
+  }
+
   // http table methods
   Future<StreamedResponse> delete(
       {required String modelName,
