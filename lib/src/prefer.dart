@@ -1,3 +1,4 @@
+/// Provides access to set set the Prefer header for Postgrest.
 class PostgrestPrefer {
   final String? _count;
   final String? _resolution;

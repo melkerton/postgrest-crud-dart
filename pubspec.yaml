@@ -1,5 +1,5 @@
 name: postgrest_crud
-description: Interface to Postgrest API.
+description: A Postgrest client that provides create, recall, update, and delete operations with support for batch operations via createBatch, updateBatch, and deleteBatch.
 version: 0.1.3-dev.1
 homepage: https://github.com/KernlAnnik/postgrest-crud-dart
 

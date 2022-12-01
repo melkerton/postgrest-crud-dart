@@ -1,3 +1,8 @@
+## 0.1.4-dev.1
+
+-   Support for RPC commands.
+-   Complete the Query system.
+
 ## 0.1.3-dev.1
 
 -   Added example with testing.

@@ -1,6 +1,6 @@
 ## Postgrest Crud
 
-A [Postgrest](https://postgrest.org) that provides create, recall, update, and delete operations with support for batch operations via createBatch, updateBatch, and deleteBatch.
+A [Postgrest](https://postgrest.org) client that provides create, recall, update, and delete operations with support for batch operations via createBatch, updateBatch, and deleteBatch.
 
 This package is intended to provide a quick and simple way to add database support for Postgrest quickly to an existing application. The requirements on the class representing a table record are meant to be minimal and mostly agnostic about the details of that class.
 
