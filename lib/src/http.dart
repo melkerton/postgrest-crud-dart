@@ -7,9 +7,12 @@ import 'package:postgrest_crud/postgrest_crud.dart';
 typedef HttpParam = Map<String, String>;
 typedef HttpHeader = Map<String, String>;
 
+/// Http method constants.
 enum HttpMethod { delete, get, head, patch, post, put }
 
-// used in Model
+/// Preprocesses an http.StreamedResponse.
+///
+/// Converts body string to `List<JsonObject>` if non-empty.
 extension HttpResponseDecoder on StreamedResponse {
   Future<List<JsonObject>> get jsonObject async {
     List<JsonObject> list = [];

@@ -1,3 +1,6 @@
+/// The main configuration to connect to Postgrest server.
+///
+/// url and schema are required, optionally set bearerToken for Authorization.
 class PostgrestConfig {
   final String url;
   final String schema;
