@@ -78,4 +78,4 @@ void main () async {
 }
 ```
 
-See [example/] folder (https://github.com/KernlAnnik/postgrest-crud-dart/tree/main/example) for a more detailed example.
+See [example/](https://github.com/KernlAnnik/postgrest-crud-dart/tree/main/example) folder for a more detailed example including mock testing methods.
