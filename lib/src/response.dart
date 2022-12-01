@@ -1,5 +1,4 @@
 import 'package:http/http.dart' as http;
-import './exception.dart';
 
 /// Provides offset, limit, count from 'Content-Range' response header.
 class Response<T> {

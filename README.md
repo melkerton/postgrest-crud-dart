@@ -2,7 +2,7 @@
 
 A [Postgrest](https://postgrest.org) client that provides create, recall, update, and delete operations with support for batch operations via createBatch, updateBatch, and deleteBatch.
 
-This package is intended to provide a quick and simple way to add database support for Postgrest quickly to an existing application. The requirements on the class representing a table record are meant to be minimal and mostly agnostic about the details of that class.
+This package is intended to provide a quick and simple way to add database support for Postgrest to an existing application. The requirements on the class representing a table record are meant to be minimal and mostly agnostic about the details of that class.
 
 ## Additional information
 
@@ -21,8 +21,8 @@ Still in early stages and very experimental.
     -   Override modelName, primaryKey, toJson, and fromJson.
     -   The package [json_serializable](https://pub.dev/packages/json_serializable) is useful for building toJson and fromJson methods from a class.
 -   Instantiate a PostrestConfig object to connect your database.
--   Instantiate a Database object with PostgrestConfig.
--   Instantiate `SERVICE` with Database.
+-   Instantiate a Database object with a PostgrestConfig object.
+-   Instantiate `SERVICE` with a Database object.
 
 ## Example
 
@@ -78,4 +78,4 @@ void main () async {
 }
 ```
 
-See [example/](https://github.com/KernlAnnik/postgrest-crud-dart/tree/main/example) for a more detailed example.
+See [example/] folder (https://github.com/KernlAnnik/postgrest-crud-dart/tree/main/example) for a more detailed example.
