@@ -20,7 +20,7 @@ class PostgrestPrefer {
     if (_resolution != null) prefer.add("resolution=$_resolution");
     if (_return != null) prefer.add("return=$_return");
     if (_tx != null) prefer.add("tx=$_tx");
-    return prefer.join('&');
+    return prefer.join(',');
   }
 }
 

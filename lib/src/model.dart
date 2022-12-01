@@ -13,6 +13,7 @@ abstract class Model<T> {
 
   /// Holds the last response from Database.
   http.StreamedResponse? lastResponse;
+  String? lastBody;
 
   // converters
   JsonObject toJson(T model);
@@ -54,7 +55,7 @@ abstract class Model<T> {
 
     final body = _payloadAsString(jsonObject);
     final query = Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
-    final response = await database.put(
+    final response = await database.patch(
         modelName: modelName,
         body: body,
         query: query,
@@ -65,8 +66,8 @@ abstract class Model<T> {
   /// Performs an upsert with resolution=ignore-duplicates
   Future<Response<T>> updateBatch(List<T> models) async {
     final body = _payloadAsString(models);
-    PostgrestPrefer prefer =
-        PostgrestPrefer(resolutionValue: 'ignore-duplicates');
+    PostgrestPrefer prefer = PostgrestPrefer(
+        resolutionValue: 'merge-duplicates', returnValue: 'representation');
     final response =
         await database.post(modelName: modelName, body: body, prefer: prefer);
     return _buildResponse(response);
