@@ -1,5 +1,30 @@
 export 'src/todo_model.dart';
+import 'src/todo_model.dart';
+import 'dart:io';
+import 'package:yaml/yaml.dart';
 
 import 'package:postgrest_crud/postgrest_crud.dart';
 
-void main() {}
+void main() async {
+  // gather config as needed
+  final configString = File('example/config.yaml').readAsStringSync();
+  final configYaml = loadYaml(configString);
+
+  /// build postgrest config, optional bearerToken
+  final PostgrestConfig postgrestConfig = PostgrestConfig(
+      url: configYaml['postgrest']['url'],
+      schema: configYaml['postgrest']['schema']);
+
+  // create a database to get model connections
+  final database = Database(postgrestConfig: postgrestConfig);
+
+  // the main service provides CRUD ops for todo table to postgrest api via Database
+  final service = TodoModel(database: database);
+
+  // get some results
+  final response = await service.recall(query: Query("?id=gte.0"));
+
+  for (final model in response.models) {
+    print('${model.id}\t${model.item}\t\t${model.details ?? "No details"}');
+  }
+}
