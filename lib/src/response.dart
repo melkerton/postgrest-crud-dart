@@ -15,11 +15,14 @@ class Response<T> {
 
       // Content-Range=[OFFSET]-[OFFSET + LIMIT - 1]/[COUNT]
       // e.g. 9-17/18 => limit = 9, records = (9...17), total search results = 18
-      // results = [] => Content-Range=*/0
+      // results = [] => Content-Range=0-1/2
       if (matches.length == 3) {
         _offset = int.parse(matches[0][0]!);
         _limit = int.parse(matches[1][0]!) - _offset + 1;
         _count = int.parse(matches[2][0]!);
+      } else if (matches.isNotEmpty) {
+        // results = [] => Content-Range=*/0
+        _count = int.parse(matches.last[0]!);
       }
     }
   }

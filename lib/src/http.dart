@@ -12,10 +12,13 @@ enum HttpMethod { delete, get, head, patch, post, put }
 // used in Model
 extension HttpResponseDecoder on StreamedResponse {
   Future<List<JsonObject>> get jsonObject async {
-    var data = json.decode(await stream.bytesToString());
     List<JsonObject> list = [];
+    var payload = await stream.bytesToString();
+    if (payload.isEmpty) {
+      return list;
+    }
 
-    // all data gets returned as a List
+    var data = json.decode(payload);
     if (data is! List) data = [data];
 
     for (final d in data) {

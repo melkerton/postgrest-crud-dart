@@ -62,24 +62,48 @@ abstract class Model<T> {
     return _buildResponse(response);
   }
 
-  void updateBatch(List<T> models) {
-    // DatabasePrefer prefer = {'resolution': 'ignore-duplicates'};
+  // upsert
+  Future<Response<T>> updateBatch(List<T> models) async {
+    final body = _payloadAsString(models);
+    PostgrestPrefer prefer =
+        PostgrestPrefer(resolutionValue: 'ignore-duplicates');
+    final response =
+        await database.post(modelName: modelName, body: body, prefer: prefer);
+    return _buildResponse(response);
   }
 
-  void updatePartial(JsonObject jsonObject) {}
+  Future<Response<T>> updatePartial(JsonObject jsonObject) async {
+    final body = _payloadAsString(jsonObject);
+    assert(jsonObject.containsKey(primaryKey),
+        "PrimaryKey `$primaryKey` not found in model!");
+
+    final query = Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
+    final response = await database.patch(
+        modelName: modelName,
+        body: body,
+        query: query,
+        prefer: _preferRepresentation);
+    return _buildResponse(response);
+  }
 
   Future<Response<T>> delete(T model) async {
+    final prefer = PostgrestPrefer(countValue: 'exact');
     final jsonObject = toJson(model);
     assert(jsonObject.containsKey(primaryKey),
         "PrimaryKey `$primaryKey` not found in model!");
 
     final query = Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
     final response = await database.delete(
-        modelName: modelName, query: query, prefer: _preferRepresentation);
+        modelName: modelName, query: query, prefer: prefer);
     return _buildResponse(response);
   }
 
-  void deleteBatch(List<int> idSet) {}
+  Future<Response<T>> deleteBatch(Query query) async {
+    final prefer = PostgrestPrefer(countValue: 'exact');
+    final response = await database.delete(
+        modelName: modelName, query: query, prefer: prefer);
+    return _buildResponse(response);
+  }
 
   Future<Response<T>> _buildResponse(http.StreamedResponse response) async {
     final models = await _responseToModels(response);
