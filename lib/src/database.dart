@@ -4,13 +4,18 @@ import 'package:http/http.dart';
 import 'package:postgrest_crud/postgrest_crud.dart';
 
 /// Handles direct interaction with Postgrest API.
+///
+/// Provides typical http methods primarily used by `Model`.
 class Database {
   final PostgrestConfig postgrestConfig;
+
+  /// Directly provide an http.Client or MockClient.
   Client httpClient = Client();
 
   // constructor
   Database({required this.postgrestConfig});
 
+  /// Closes the current http.Client.
   void close() {
     httpClient.close();
   }
@@ -89,6 +94,7 @@ class Database {
   // rpc command
   void rpc() {}
 
+  /// Builds and sends the final request, returning a Future http.StreamedResponse.
   Future<StreamedResponse> sendRequest(
       {required HttpMethod method,
       required String modelName,

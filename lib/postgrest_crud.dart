@@ -1,6 +1,4 @@
-/// Support for doing something awesome.
-///
-/// More dartdocs go here.
+/// A Future based interface to Postgrest.
 library postgrest_crud;
 
 export 'src/config.dart';
