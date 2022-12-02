@@ -48,43 +48,43 @@ import 'package:postgrest_crud/postgrest_crud.dart';
 
 // CLASS
 class Widget {
-int id;
-Widget({this.id})
+    int id;
+    Widget({this.id})
 }
 
 // CLIENT<CLASS>
 class WidgetClient extends Client<Widget> {
-@override
-String get modelName => "widget";
+    @override
+    String get modelName => "widget";
 
-@override
-String get primaryKey => "id";
+    @override
+    String get primaryKey => "id";
 
-WidgetClient({required super.connection});
+    WidgetClient({required super.connection});
 
-@override
-Widget fromJson(JsonObject json) {
-return Widget(id: json['id']);
-}
+    @override
+    Widget fromJson(JsonObject json) {
+        return Widget(id: json['id']);
+    }
 
-@override
-JsonObject toJson(Widget model) {
-return {'id': model.id};
-}
+    @override
+    JsonObject toJson(Widget model) {
+        return {'id': model.id};
+    }
 }
 
 void main () async {
-// PostgrestConfig
-final postgrestConfig = PostgrestConfig(url: URL, schema: SCHEMA);
+    // PostgrestConfig
+    final postgrestConfig = PostgrestConfig(url: URL, schema: SCHEMA);
 
     // Connection
     final connection = Connection(postgrestConfig: postgrestConfig);
 
     // CLIENT<CLASS>
-    final service = TodoClient(connection: connection);
+    final client = TodoClient(connection: connection);
 
     // request records
-    final response = await service.recall();
+    final response = await client.recall();
 
     // do something with response.models
 
