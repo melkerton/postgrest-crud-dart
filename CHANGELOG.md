@@ -3,6 +3,7 @@
 -   Rename `Database` to `Connection`.
 -   Rename `Model` to `Client`.
 -   Add `lastBody` to `Client`.
+-   Complete documentation.
 
 ## 0.1.3-dev.1
 
