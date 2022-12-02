@@ -1,9 +1,13 @@
 analyze:
 	dart analyze lib/src/*
 
+
 doc:
 	dart doc
 
+pana:
+	pana --no-warning .
+	
 publish:
 	dart pub publish
 
