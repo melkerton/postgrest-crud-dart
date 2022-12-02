@@ -1,8 +1,11 @@
+/// Provides access to set the Prefer header for Postgrest.
 class PostgrestPrefer {
   final String? _count;
   final String? _resolution;
   final String? _return;
   final String? _tx;
+
+  /// Used to set `Prefer` header for requests.
   PostgrestPrefer(
       {String? countValue,
       String? resolutionValue,

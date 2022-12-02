@@ -1,27 +1,31 @@
 import 'dart:core';
 
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:postgrest_crud/postgrest_crud.dart';
 
 /// Handles direct interaction with Postgrest API.
 ///
-/// Provides typical http methods primarily used by `Model`.
-class Database {
+/// Provides typical http methods primarily used by `Client`.
+class Connection {
+  /// Postgrest connection parameters.
   final PostgrestConfig postgrestConfig;
 
-  /// Directly provide an http.Client or MockClient.
-  Client httpClient = Client();
+  /// The `http.Client` to use for requests.
+  final http.Client httpClient;
 
-  // constructor
-  Database({required this.postgrestConfig});
+  /// Builds a connection with config parameters and optional `http.Client`.
+  ///
+  /// Setting `httpClient` is useful for providing an `http.MockClient` for testing.
+  Connection({required this.postgrestConfig, http.Client? httpClient})
+      : httpClient = httpClient ?? http.Client();
 
-  /// Closes the current http.Client.
+  /// Closes the current `http.Client`.
   void close() {
     httpClient.close();
   }
 
-  // http table methods
-  Future<StreamedResponse> delete(
+  /// Sends an HTTP DELETE request with given request parameters.
+  Future<http.StreamedResponse> delete(
       {required String modelName,
       Query? query,
       PostgrestPrefer? prefer}) async {
@@ -32,7 +36,8 @@ class Database {
         prefer: prefer);
   }
 
-  Future<StreamedResponse> get(
+  /// Sends an HTTP GET request with given request parameters.
+  Future<http.StreamedResponse> get(
       {required String modelName,
       Query? query,
       PostgrestPrefer? prefer}) async {
@@ -43,7 +48,8 @@ class Database {
         prefer: prefer);
   }
 
-  Future<StreamedResponse> head(
+  /// Sends an HTTP HEAD request with given request parameters.
+  Future<http.StreamedResponse> head(
       {required String modelName,
       Query? query,
       PostgrestPrefer? prefer}) async {
@@ -54,7 +60,8 @@ class Database {
         prefer: prefer);
   }
 
-  Future<StreamedResponse> patch(
+  /// Sends an HTTP PATCH request with given request parameters.
+  Future<http.StreamedResponse> patch(
       {required String modelName,
       required String body,
       Query? query,
@@ -67,7 +74,8 @@ class Database {
         body: body);
   }
 
-  Future<StreamedResponse> post(
+  /// Sends an HTTP POST request with given request parameters.
+  Future<http.StreamedResponse> post(
       {required String modelName,
       required String body,
       PostgrestPrefer? prefer}) async {
@@ -78,7 +86,8 @@ class Database {
         body: body);
   }
 
-  Future<StreamedResponse> put(
+  /// Sends an HTTP PUT request with given request parameters.
+  Future<http.StreamedResponse> put(
       {required String modelName,
       required String body,
       Query? query,
@@ -91,11 +100,11 @@ class Database {
         body: body);
   }
 
-  // rpc command
+  /// Send an rpc command with arguments. `IN DEV`.
   void rpc() {}
 
   /// Builds and sends the final request, returning a Future http.StreamedResponse.
-  Future<StreamedResponse> sendRequest(
+  Future<http.StreamedResponse> sendRequest(
       {required HttpMethod method,
       required String modelName,
       Query? query,
@@ -106,7 +115,7 @@ class Database {
     if (query != null) {
       url = "$url${query.toString()}";
     }
-    var request = Request(method.name, Uri.parse(url));
+    var request = http.Request(method.name, Uri.parse(url));
 
     //[Accept|Content]-Profile
     if ([HttpMethod.get, HttpMethod.head].contains(method)) {

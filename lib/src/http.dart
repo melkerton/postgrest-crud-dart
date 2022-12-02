@@ -4,9 +4,6 @@ import 'package:http/http.dart';
 
 import 'package:postgrest_crud/postgrest_crud.dart';
 
-typedef HttpParam = Map<String, String>;
-typedef HttpHeader = Map<String, String>;
-
 /// Http method constants.
 enum HttpMethod { delete, get, head, patch, post, put }
 
@@ -14,9 +11,14 @@ enum HttpMethod { delete, get, head, patch, post, put }
 ///
 /// Converts body string to `List<JsonObject>` if non-empty.
 extension HttpResponseDecoder on StreamedResponse {
-  Future<List<JsonObject>> get jsonObject async {
+  /// Consumes the response stream and returns a `String`.
+  Future<String> get bodyToString async {
+    return await stream.bytesToString();
+  }
+
+  /// Converts the response body `String` to a json object.
+  Future<List<JsonObject>> jsonObject(String payload) async {
     List<JsonObject> list = [];
-    var payload = await stream.bytesToString();
     if (payload.isEmpty) {
       return list;
     }

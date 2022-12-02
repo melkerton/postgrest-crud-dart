@@ -7,14 +7,14 @@ class Todo {
   Todo({this.id, required this.item, this.details});
 }
 
-class TodoModel extends Model<Todo> {
+class TodoClient extends Client<Todo> {
   @override
   String get modelName => "todo";
 
   @override
   String get primaryKey => "id";
 
-  TodoModel({required super.database});
+  TodoClient({required super.connection});
 
   @override
   Todo fromJson(JsonObject json) {

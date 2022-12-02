@@ -2,52 +2,68 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:postgrest_crud/postgrest_crud.dart';
 
-/// Handles Model interactions with Database.
-abstract class Model<T> {
-  /// Postgrest URL table slug. e.g. http://example.com/MODEL-NAME/
+/// Handles table record operations.
+abstract class Client<T> {
+  /// Postgrest URL table slug. e.g. http://example.com/MODEL-NAME/.
+  /// Requires override.
   String get modelName;
 
   /// Primary Key field of model table.
+  /// Requires override.
   String get primaryKey;
-  final Database database;
 
-  /// Holds the last response from Database.
-  http.StreamedResponse? lastResponse;
-  String? lastBody;
+  /// Connection to Postgrest.
+  final Connection connection;
 
-  // converters
+  /// Get the last response from Connection if any.
+  http.StreamedResponse? get lastResponse => _lastResponse;
+  http.StreamedResponse? _lastResponse;
+
+  /// Holds the last response body.
+  String? get lastBody => _lastBody;
+  String? _lastBody;
+
+  /// Model to Json serializer.
+  /// Requires override.
   JsonObject toJson(T model);
+
+  /// Json to Model deserializer.
+  /// Requires override.
   T fromJson(JsonObject jsonObject);
 
   // common prefer
   final PostgrestPrefer _preferRepresentation =
       PostgrestPrefer(returnValue: 'representation');
 
-  // constructors
-  Model({required this.database});
+  /// Creates a client for `modelName`.
+  Client({required this.connection});
 
-  // crud operations
+  /// Creates a single record from `model`.
+  /// Returns the created record as `Response.models.first`.
   Future<Response<T>> create(T model) async {
     final body = _payloadAsString(model);
-    final response = await database.post(
+    final response = await connection.post(
         modelName: modelName, prefer: _preferRepresentation, body: body);
     return _buildResponse(response);
   }
 
+  /// Create multiple records in a single request.
   Future<Response<T>> createBatch(List<T> modelList) async {
     final body = _payloadAsString(modelList);
-    final response = await database.post(
+    final response = await connection.post(
         modelName: modelName, prefer: _preferRepresentation, body: body);
     return _buildResponse(response);
   }
 
+  /// Get records from database matching `Query`.
   Future<Response<T>> recall({Query? query}) async {
     final PostgrestPrefer prefer = PostgrestPrefer(countValue: 'exact');
-    final response =
-        await database.get(modelName: modelName, query: query, prefer: prefer);
+    final response = await connection.get(
+        modelName: modelName, query: query, prefer: prefer);
     return _buildResponse(response);
   }
 
+  /// Updates a single record. Requires `model[primaryKey]` to be set.
   Future<Response<T>> update(T model) async {
     final jsonObject = toJson(model);
     assert(jsonObject.containsKey(primaryKey),
@@ -55,7 +71,7 @@ abstract class Model<T> {
 
     final body = _payloadAsString(jsonObject);
     final query = Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
-    final response = await database.patch(
+    final response = await connection.patch(
         modelName: modelName,
         body: body,
         query: query,
@@ -69,7 +85,7 @@ abstract class Model<T> {
     PostgrestPrefer prefer = PostgrestPrefer(
         resolutionValue: 'merge-duplicates', returnValue: 'representation');
     final response =
-        await database.post(modelName: modelName, body: body, prefer: prefer);
+        await connection.post(modelName: modelName, body: body, prefer: prefer);
     return _buildResponse(response);
   }
 
@@ -84,7 +100,7 @@ abstract class Model<T> {
     }
 
     query = query ?? Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
-    final response = await database.patch(
+    final response = await connection.patch(
         modelName: modelName,
         body: body,
         query: query,
@@ -92,6 +108,7 @@ abstract class Model<T> {
     return _buildResponse(response);
   }
 
+  /// Delete a record matching `model[primaryKey]`.
   Future<Response<T>> delete(T model) async {
     final prefer = PostgrestPrefer(countValue: 'exact');
     final jsonObject = toJson(model);
@@ -99,14 +116,17 @@ abstract class Model<T> {
         "PrimaryKey `$primaryKey` not found in model!");
 
     final query = Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
-    final response = await database.delete(
+    final response = await connection.delete(
         modelName: modelName, query: query, prefer: prefer);
     return _buildResponse(response);
   }
 
+  /// Delete multiple records matching `Query`.
+  ///
+  /// See https://postgrest.org/en/stable/api.html#deletions.
   Future<Response<T>> deleteBatch(Query query) async {
     final prefer = PostgrestPrefer(countValue: 'exact');
-    final response = await database.delete(
+    final response = await connection.delete(
         modelName: modelName, query: query, prefer: prefer);
     return _buildResponse(response);
   }
@@ -118,7 +138,7 @@ abstract class Model<T> {
           response: response);
     }
 
-    final models = await _responseToModels(response);
+    final models = await _responseToClients(response);
     return Response<T>(response: response, models: models);
   }
 
@@ -135,10 +155,12 @@ abstract class Model<T> {
     }
   }
 
-  Future<List<T>> _responseToModels(http.StreamedResponse response) async {
-    lastResponse = response;
+  Future<List<T>> _responseToClients(http.StreamedResponse response) async {
+    _lastResponse = response;
+    _lastBody = await response.bodyToString;
+
     List<T> list = [];
-    final jsonList = await response.jsonObject;
+    final jsonList = await response.jsonObject(_lastBody!);
 
     for (final obj in jsonList) {
       list.add(fromJson(obj));

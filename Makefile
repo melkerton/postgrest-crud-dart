@@ -1,8 +1,14 @@
+analyze:
+	dart analyze lib/src/*
+
 doc:
 	dart doc
 
 publish:
 	dart pub publish
+
+publish-dry-run:
+	dart pub publish --dry-run
 
 test:
 	dart test

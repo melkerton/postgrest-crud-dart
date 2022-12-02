@@ -15,11 +15,11 @@ void main() async {
       url: configYaml['postgrest']['url'],
       schema: configYaml['postgrest']['schema']);
 
-  // create a database to get model connections
-  final database = Database(postgrestConfig: postgrestConfig);
+  // create a connection to get model connections
+  final connection = Connection(postgrestConfig: postgrestConfig);
 
-  // the main service provides CRUD ops for todo table to postgrest api via Database
-  final service = TodoModel(database: database);
+  // the main service provides CRUD ops for todo table to postgrest api via Connection
+  final service = TodoClient(connection: connection);
 
   // get some results
   final response = await service.recall(query: Query("?id=gte.0"));
@@ -31,5 +31,5 @@ void main() async {
   // close httpClient when finished all requests
   // simply closes the http.Client
   // otherwise http.Client will hang until Keep-Alive? timeout triggers
-  database.close();
+  connection.close();
 }

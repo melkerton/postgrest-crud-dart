@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:http/testing.dart';
 import 'package:http/http.dart' as http;
 import 'package:postgrest_crud/postgrest_crud.dart';
@@ -9,7 +7,12 @@ void runSetup() {}
 final testPostgrestConfig = PostgrestConfig(
     url: "http://localhost", schema: "test", bearerToken: "TOKEN");
 
-final testDatabase = Database(postgrestConfig: testPostgrestConfig);
+//final testConnection = Connection(postgrestConfig: testPostgrestConfig);
+
+Connection makeTestConnection(http.Client httpClient) {
+  return Connection(
+      postgrestConfig: testPostgrestConfig, httpClient: httpClient);
+}
 
 MockClient testMockClient(
     {Function? preResponse,
