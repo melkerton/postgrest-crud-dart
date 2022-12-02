@@ -19,11 +19,12 @@ void main() async {
   final connection = Connection(postgrestConfig: postgrestConfig);
 
   // the main service provides CRUD ops for todo table to postgrest api via Connection
-  final service = TodoClient(connection: connection);
+  final client = TodoClient(connection: connection);
 
   // get some results
-  final response = await service.recall(query: Query("?id=gte.0"));
+  final response = await client.recall(query: Query("?id=gte.0"));
 
+  // print the results
   for (final model in response.models) {
     print('${model.id}\t${model.item}\t\t${model.details ?? "No details"}');
   }

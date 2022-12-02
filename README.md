@@ -8,6 +8,12 @@ This package is intended to provide a quick and simple way to add connection sup
 
 Still in early stages and very experimental.
 
+## Motivation
+
+The primary reason for developing this package is to provide a quick way to connect to a Postgrest API server. While there already exists an ORM-like [Postgrest Dart](https://pub.dev/packages/postgrest) package that provides this functionality it does not meet the requirements I was looking for in a package like this. This package attempts to abstract some of the repetitive patterns that occur when using an ORM-like approach (`client.from("table").select<PostgrestList>().withConverter(() => {})` can be reduced to `client.recall()`).
+
+The secondary reason for this package is to abstract the conversion process between concrete class and json representation. While `Postgrest Dart` provides something similar to this via a `withConverter` method I wanted something that was more transparent and contained paging related information.
+
 ### Roadmap
 
 -   Complete the `Query` system.
