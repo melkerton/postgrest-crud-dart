@@ -1,13 +1,18 @@
 import 'package:http/http.dart' as http;
 
-/// Provides offset, limit, count from 'Content-Range' response header.
+/// Provides models and offset, limit, count from 'Content-Range' response header.
 class Response<T> {
+  /// List of models from response.
   final List<T> models;
+
+  /// Response from [http.Client] request.
   final http.StreamedResponse response;
+
   int _limit = 0;
   int _count = 0;
   int _offset = 0;
 
+  /// Create a response object with models and paging related information.
   Response({required this.response, required this.models}) {
     String? contentRange;
     if (response.headers.containsKey('Content-Range')) {
@@ -35,7 +40,17 @@ class Response<T> {
     }
   }
 
+  /// Estimated limit derived from `Content-Range` headers.
+  ///
+  /// May not reflect limit set in request parameters. Limit is calculated as
+  /// the difference between the first record index and the last record index.
   int get limit => _limit;
+
+  /// Count of the total records from a given [Query].
+  ///
+  /// Default Prefer is count=exact.
   int get count => _count;
+
+  /// The index of the first record.
   int get offset => _offset;
 }

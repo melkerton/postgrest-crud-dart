@@ -5,14 +5,14 @@ class MockClass {
   MockClass({this.id});
 }
 
-class MockClassModel extends Model<MockClass> {
+class MockClassClient extends Client<MockClass> {
   @override
   String get modelName => "mock_class";
 
   @override
   String get primaryKey => "id";
 
-  MockClassModel({required super.database});
+  MockClassClient({required super.connection});
 
   @override
   MockClass fromJson(JsonObject json) {

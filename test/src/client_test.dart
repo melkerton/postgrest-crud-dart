@@ -1,4 +1,4 @@
-@Tags(['model'])
+@Tags(['client'])
 import 'package:test/test.dart';
 import 'package:postgrest_crud/postgrest_crud.dart';
 
@@ -7,18 +7,20 @@ import '../mock.dart';
 
 void main() {
   setUp(runSetup);
-  test('ModelCreate', () async {
-    testDatabase.httpClient = testMockClient(body: '[{"id":1}]');
-    final service = MockClassModel(database: testDatabase);
+  test('ClientCreate', () async {
+    final testConnection =
+        makeTestConnection(testMockClient(body: '[{"id":1}]'));
+    final service = MockClassClient(connection: testConnection);
     final model = MockClass();
     final response = await service.create(model);
     expect(response.models.isNotEmpty, equals(true));
     expect(response.models.first.id, equals(1));
   });
 
-  test('ModelCreateBatch', () async {
-    testDatabase.httpClient = testMockClient(body: '[{"id":1}, {"id":2}]');
-    final service = MockClassModel(database: testDatabase);
+  test('ClientCreateBatch', () async {
+    final testConnection =
+        makeTestConnection(testMockClient(body: '[{"id":1}, {"id":2}]'));
+    final service = MockClassClient(connection: testConnection);
     final models = [MockClass(), MockClass()];
     final response = await service.createBatch(models);
     expect(response.models.isNotEmpty, equals(true));
@@ -27,10 +29,11 @@ void main() {
     expect(response.models[1].id, equals(2));
   });
 
-  test('ModelRecall', () async {
-    testDatabase.httpClient = testMockClient(
+  test('ClientRecall', () async {
+    final mockClient = testMockClient(
         body: '[{"id":1}, {"id":2}]', headers: {"Content-Range": "0-1/20"});
-    final service = MockClassModel(database: testDatabase);
+    final testConnection = makeTestConnection(mockClient);
+    final service = MockClassClient(connection: testConnection);
     final response = await service.recall();
 
     expect(response.models.isNotEmpty, equals(true));
@@ -46,45 +49,52 @@ void main() {
     }
   });
 
-  test('ModelUpdateModel', () async {
-    testDatabase.httpClient = testMockClient(body: '[{"id":1}]');
-    final service = MockClassModel(database: testDatabase);
+  test('ClientUpdateClient', () async {
+    final testConnection =
+        makeTestConnection(testMockClient(body: '[{"id":1}]'));
+    final service = MockClassClient(connection: testConnection);
     final model = MockClass(id: 1);
     final response = await service.update(model);
     expect(response.models.isNotEmpty, equals(true));
   });
 
-  test('ModelUpdateModelList', () async {
-    testDatabase.httpClient = testMockClient(body: '[{"id":1},{"id":2}]');
-    final service = MockClassModel(database: testDatabase);
+  test('ClientUpdateClientList', () async {
+    final testConnection =
+        makeTestConnection(testMockClient(body: '[{"id":1}, {"id":2}]'));
+    final service = MockClassClient(connection: testConnection);
 
     final models = [MockClass(), MockClass()];
     final response = await service.updateBatch(models);
     expect(response.models.isNotEmpty, equals(true));
   });
 
-  test('ModelUpdateJsonObject', () async {
-    testDatabase.httpClient = testMockClient(body: '[{"id":1}]');
-    final service = MockClassModel(database: testDatabase);
-    final partialModel = {"id": 1};
-    final response = await service.updatePartial(partialModel);
+  test('ClientUpdateJsonObject', () async {
+    final testConnection =
+        makeTestConnection(testMockClient(body: '[{"id":1}]'));
+    final service = MockClassClient(connection: testConnection);
+    final partialClient = {"id": 1};
+    final response = await service.updatePartial(partialClient);
     expect(response.models.isNotEmpty, equals(true));
   });
 
-  test('ModelDeleteModel', () async {
-    testDatabase.httpClient =
+  test('ClientDeleteClient', () async {
+    final mockClient =
         testMockClient(body: '', headers: {'Content-Range': '*/1'});
-    final service = MockClassModel(database: testDatabase);
+    final testConnection = makeTestConnection(mockClient);
+
+    final service = MockClassClient(connection: testConnection);
 
     final model = MockClass(id: 1);
     final response = await service.delete(model);
     expect(response.count, equals(1));
   });
 
-  test('ModelDeleteBatch', () async {
-    testDatabase.httpClient =
+  test('ClientDeleteBatch', () async {
+    final mockClient =
         testMockClient(body: '', headers: {'Content-Range': '*/2'});
-    final service = MockClassModel(database: testDatabase);
+    final testConnection = makeTestConnection(mockClient);
+
+    final service = MockClassClient(connection: testConnection);
 
     final response = await service.deleteBatch(Query("?id=in.[1,2,3]"));
     expect(response.count, equals(2));

@@ -1,1 +1,3 @@
-
+-   Support for RPC commands.
+-   Complete the Query system.
+-   Add flexible logging facility

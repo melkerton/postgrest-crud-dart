@@ -7,7 +7,7 @@ import 'package:postgrest_crud/postgrest_crud.dart';
 import '../src/todo_model.dart';
 
 void main() {
-  late TodoModel service;
+  late TodoClient service;
   late Query query;
   setUp(() {
     final configString = File('example/config.yaml').readAsStringSync();
@@ -15,7 +15,8 @@ void main() {
     final PostgrestConfig postgrestConfig = PostgrestConfig(
         url: configYaml['postgrest']['url'],
         schema: configYaml['postgrest']['schema']);
-    service = TodoModel(database: Database(postgrestConfig: postgrestConfig));
+    service =
+        TodoClient(connection: Connection(postgrestConfig: postgrestConfig));
     query = Query("?item=like.*cream*");
   });
 
