@@ -10,7 +10,7 @@ Still in early stages and very experimental.
 
 ## Motivation
 
-The primary reason for developing this package is to provide a quick way to connect to a Postgrest API server. While there already exists an ORM-like [Postgrest Dart](https://pub.dev/packages/postgrest) package that provides this functionality it does not meet the requirements I was looking for in a package like this. This package attempts to abstract some of the repetitive patterns that occur when using an ORM-like approach. e.g.
+The primary reason for developing this package is to provide a quick way to connect to a Postgrest API server. While there already exists an ORM-like package ([Postgrest Dart](https://pub.dev/packages/postgrest)) that provides this functionality it does not meet the requirements I was looking for in a package like this. This package attempts to abstract some of the repetitive patterns that occur when using an ORM-like approach. e.g.
 
 ```
 client.from("table").select<PostgrestList>().withConverter(() => {})
@@ -42,7 +42,7 @@ The secondary reason for this package is to abstract the conversion process betw
 
 ## Example
 
-````
+```
 
 import 'package:postgrest_crud/postgrest_crud.dart';
 
@@ -98,5 +98,3 @@ final postgrestConfig = PostgrestConfig(url: URL, schema: SCHEMA);
 ```
 
 See [example/](https://github.com/KernlAnnik/postgrest-crud-dart/tree/main/example) folder for a more detailed example including mock testing methods (TODO).
-```
-````
