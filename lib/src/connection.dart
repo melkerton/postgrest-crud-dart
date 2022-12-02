@@ -135,8 +135,6 @@ class Connection {
           "Bearer ${postgrestConfig.bearerToken}";
     }
 
-    // application
-
     // body
     if (body != null) {
       request.headers['Content-Type'] = 'application/json';
