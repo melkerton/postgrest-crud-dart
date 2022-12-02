@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS "todo" (
     details TEXT
 );
 
--- GRANTS
+-- GRANTS (Absolutely insecure.)
 GRANT SELECT ON "todo" TO api_anon;
 GRANT ALL ON "todo" TO api_anon;
 GRANT USAGE, SELECT ON SEQUENCE "todo_id_seq" TO api_anon;

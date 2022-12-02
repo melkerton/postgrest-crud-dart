@@ -1,3 +1,8 @@
+## 0.1.5-dev.1
+
+-   Fix example/example.dart, update to new identifiers (Database to Connection, etc).
+-   Added code of conduct for Github.
+
 ## 0.1.4-dev.1
 
 -   Rename `Database` to `Connection`.
