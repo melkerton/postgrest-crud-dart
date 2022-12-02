@@ -15,7 +15,7 @@ Still in early stages and very experimental.
 
 ## Setup
 
--   Create a class (`CLASS`) that represents a table in your PostgreSQL connection.
+-   Create a class (`CLASS`) that represents a table in your PostgreSQL database.
     -   The only requirement is that it has at least one property that represents a primary key.
 -   Create a class (`CLIENT<CLASS>`) that extends `Client<CLASS>`.
     -   Override modelName, primaryKey, toJson, and fromJson.
@@ -60,10 +60,10 @@ void main () async {
     // PostgrestConfig
     final postgrestConfig = PostgrestConfig(url: URL, schema: SCHEMA);
 
-    // Database
-    final connection = Database(postgrestConfig: postgrestConfig);
+    // Connection
+    final connection = Connection(postgrestConfig: postgrestConfig);
 
-    // SERVICE
+    // CLIENT<CLASS>
     final service = TodoClient(connection: connection);
 
     // request records
