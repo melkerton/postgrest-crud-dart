@@ -132,14 +132,27 @@ abstract class Client<T> {
   }
 
   Future<Response<T>> _buildResponse(http.StreamedResponse response) async {
+    // ensure valid status code
     if (response.statusCode < 200 || response.statusCode > 299) {
       throw PostgrestCrudException(
           "${response.reasonPhrase} (${response.statusCode})",
           response: response);
     }
 
-    final models = await _responseToClients(response);
-    return Response<T>(response: response, models: models);
+    // store last* data
+    _lastResponse = response;
+    _lastBody = await response.bodyToString;
+
+    // create models and jsonObjects
+    List<T> models = [];
+    final jsonObjects = await response.jsonObject(_lastBody!);
+
+    for (final obj in jsonObjects) {
+      models.add(fromJson(obj));
+    }
+
+    return Response<T>(
+        response: response, jsonObjects: jsonObjects, models: models);
   }
 
   // helpers
@@ -153,19 +166,5 @@ abstract class Client<T> {
     } else {
       throw Error();
     }
-  }
-
-  Future<List<T>> _responseToClients(http.StreamedResponse response) async {
-    _lastResponse = response;
-    _lastBody = await response.bodyToString;
-
-    List<T> list = [];
-    final jsonList = await response.jsonObject(_lastBody!);
-
-    for (final obj in jsonList) {
-      list.add(fromJson(obj));
-    }
-
-    return list;
   }
 }

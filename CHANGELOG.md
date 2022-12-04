@@ -1,3 +1,7 @@
+## 0.1.6-dev.1
+
+-   Complete Query
+
 ## 0.1.5-dev.1
 
 -   Fix example/example.dart, update to new identifiers (Database to Connection, etc).
