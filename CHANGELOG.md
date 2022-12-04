@@ -1,6 +1,6 @@
 ## 0.1.6-dev.1
 
--   Complete Query
+-   Made jsonObjects available in Response (jinja renderMap requirements)
 
 ## 0.1.5-dev.1
 
