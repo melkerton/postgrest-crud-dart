@@ -1,5 +1,7 @@
 -   Support for RPC commands.
--   Complete Query
+-   Add support for Compound query operations e.g. (and=(a=b,or=(c=d)))
 -   Add flexible logging facility
 -   Review bearerToken implementation, possibly add an auth method to Connection.
 -   Need to review character encoding handling for Query.
+-   Implement a `Type` check for filters.
+-   Transition to node-mock-server.

@@ -3,7 +3,7 @@ import 'package:postgrest_crud/postgrest_crud.dart';
 
 /// Provides models and offset, limit, count from 'Content-Range' response header.
 class Response<T> {
-  final List<JsonObject> jsonObjects;
+  final List<JsonObject> json;
 
   /// List of models from response.
   final List<T> models;
@@ -16,10 +16,7 @@ class Response<T> {
   int _offset = 0;
 
   /// Create a response object with models and paging related information.
-  Response(
-      {required this.response,
-      required this.jsonObjects,
-      required this.models}) {
+  Response({required this.response, required this.json, required this.models}) {
     String? contentRange;
     if (response.headers.containsKey('Content-Range')) {
       contentRange = response.headers['Content-Range']!;

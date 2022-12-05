@@ -1,6 +1,11 @@
+## 0.1.7-dev.1
+
+-   Rough in all Filter constructors (isEq, isGt, etc).
+-   All `Filter` constructors accepts `dynamic` values, will add `Type` support in future.
+
 ## 0.1.6-dev.1
 
--   Made jsonObjects available in Response (jinja renderMap requirements)
+-   Made jsonObjects available in `Response` (jinja renderMap requirements).
 
 ## 0.1.5-dev.1
 

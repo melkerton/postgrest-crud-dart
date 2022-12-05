@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "node-mock-server": "^0.25.4"
+  }
+}
