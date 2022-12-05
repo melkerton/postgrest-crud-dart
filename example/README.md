@@ -1,4 +1,4 @@
-## Setup Example
+## Example Setup
 
 ### Create a configuration file
 
@@ -21,7 +21,7 @@ $ node mock
 
 ### Database Setup
 
-The migrations under `database/` can be used to create a Postgresql schema to be used with this example. See [yoyo-migrations](https://pypi.org/project/yoyo-migrations/) for confiuration. A sample configuration is provided `database/yoyo.sample.ini`.
+The migrations under `database/` can be used to create a Postgresql schema to be used with this example. See [yoyo-migrations](https://pypi.org/project/yoyo-migrations/) for configuration. A sample configuration is provided `database/yoyo.sample.ini`.
 
 ```
 $ cd database

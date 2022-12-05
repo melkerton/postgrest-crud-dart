@@ -22,12 +22,16 @@ can be reduced to
 client.recall()
 ```
 
-The secondary reason for this package is to abstract the conversion process between concrete class and json representation. While `Postgrest Dart` provides something similar to this via a `withConverter` method I wanted something that was more transparent and contained paging related information.
+The secondary reason for this package is to abstract the conversion process between concrete class and json representation. While `Postgrest Dart` provides something similar to this via a `withConverter` method I wanted something that was more transparent and contained additional paging related information.
 
 ### Roadmap
 
--   Complete the `Query` system.
--   Add support for RPC commands.
+-   Implement a `Type` check for filters.
+-   Support for RPC commands.
+-   Add support for Compound query operations e.g. (and=(a=b,or=(c=d)))
+-   Add flexible logging facility.
+-   Review bearerToken implementation, possibly add an auth method to Connection.
+-   Review character encoding handling for Query.
 
 ## Setup
 

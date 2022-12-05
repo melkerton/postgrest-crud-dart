@@ -2,6 +2,7 @@
 
 -   Rough in all Filter constructors (isEq, isGt, etc).
 -   All `Filter` constructors accepts `dynamic` values, will add `Type` support in future.
+-   Transition to node-mock-server for the example.
 
 ## 0.1.6-dev.1
 
