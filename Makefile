@@ -1,7 +1,6 @@
 analyze:
 	dart analyze lib/src/*
 
-
 doc:
 	dart doc
 
