@@ -24,7 +24,9 @@ void main() async {
   // get some results
   final response = await client.recall(query: Query());
 
+  // print paging information.
   print("Found ${response.models.length} / ${response.count} total records.");
+
   // print the results
   for (final model in response.models) {
     print('${model.id}\t${model.item}\t\t${model.details ?? "No details"}');
