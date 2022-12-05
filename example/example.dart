@@ -7,7 +7,7 @@ import 'package:postgrest_crud/postgrest_crud.dart';
 
 void main() async {
   // gather config as needed
-  final configString = File('example/config.yaml').readAsStringSync();
+  final configString = File('./config.yaml').readAsStringSync();
   final configYaml = loadYaml(configString);
 
   /// build postgrest config, optional bearerToken
@@ -22,7 +22,10 @@ void main() async {
   final client = TodoClient(connection: connection);
 
   // get some results
-  final response = await client.recall(query: Query("?id=gte.0"));
+  final response = await client.recall(query: Query());
+
+  // print paging information.
+  print("Found ${response.models.length} / ${response.count} total records.");
 
   // print the results
   for (final model in response.models) {

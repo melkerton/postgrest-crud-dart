@@ -10,9 +10,9 @@ void main() {
   test('ClientCreate', () async {
     final testConnection =
         makeTestConnection(testMockClient(body: '[{"id":1}]'));
-    final service = MockClassClient(connection: testConnection);
+    final client = MockClassClient(connection: testConnection);
     final model = MockClass();
-    final response = await service.create(model);
+    final response = await client.create(model);
     expect(response.models.isNotEmpty, equals(true));
     expect(response.models.first.id, equals(1));
   });
@@ -20,9 +20,9 @@ void main() {
   test('ClientCreateBatch', () async {
     final testConnection =
         makeTestConnection(testMockClient(body: '[{"id":1}, {"id":2}]'));
-    final service = MockClassClient(connection: testConnection);
+    final client = MockClassClient(connection: testConnection);
     final models = [MockClass(), MockClass()];
-    final response = await service.createBatch(models);
+    final response = await client.createBatch(models);
     expect(response.models.isNotEmpty, equals(true));
     expect(response.models.length, equals(2));
     expect(response.models.first.id, equals(1));
@@ -33,8 +33,8 @@ void main() {
     final mockClient = testMockClient(
         body: '[{"id":1}, {"id":2}]', headers: {"Content-Range": "0-1/20"});
     final testConnection = makeTestConnection(mockClient);
-    final service = MockClassClient(connection: testConnection);
-    final response = await service.recall();
+    final client = MockClassClient(connection: testConnection);
+    final response = await client.recall();
 
     expect(response.models.isNotEmpty, equals(true));
     expect(response.models.length, equals(2));
@@ -52,28 +52,28 @@ void main() {
   test('ClientUpdateClient', () async {
     final testConnection =
         makeTestConnection(testMockClient(body: '[{"id":1}]'));
-    final service = MockClassClient(connection: testConnection);
+    final client = MockClassClient(connection: testConnection);
     final model = MockClass(id: 1);
-    final response = await service.update(model);
+    final response = await client.update(model);
     expect(response.models.isNotEmpty, equals(true));
   });
 
   test('ClientUpdateClientList', () async {
     final testConnection =
         makeTestConnection(testMockClient(body: '[{"id":1}, {"id":2}]'));
-    final service = MockClassClient(connection: testConnection);
+    final client = MockClassClient(connection: testConnection);
 
     final models = [MockClass(), MockClass()];
-    final response = await service.updateBatch(models);
+    final response = await client.updateBatch(models);
     expect(response.models.isNotEmpty, equals(true));
   });
 
   test('ClientUpdateJsonObject', () async {
     final testConnection =
         makeTestConnection(testMockClient(body: '[{"id":1}]'));
-    final service = MockClassClient(connection: testConnection);
+    final client = MockClassClient(connection: testConnection);
     final partialClient = {"id": 1};
-    final response = await service.updatePartial(partialClient);
+    final response = await client.updatePartial(partialClient);
     expect(response.models.isNotEmpty, equals(true));
   });
 
@@ -82,10 +82,10 @@ void main() {
         testMockClient(body: '', headers: {'Content-Range': '*/1'});
     final testConnection = makeTestConnection(mockClient);
 
-    final service = MockClassClient(connection: testConnection);
+    final client = MockClassClient(connection: testConnection);
 
     final model = MockClass(id: 1);
-    final response = await service.delete(model);
+    final response = await client.delete(model);
     expect(response.count, equals(1));
   });
 
@@ -94,9 +94,9 @@ void main() {
         testMockClient(body: '', headers: {'Content-Range': '*/2'});
     final testConnection = makeTestConnection(mockClient);
 
-    final service = MockClassClient(connection: testConnection);
+    final client = MockClassClient(connection: testConnection);
 
-    final response = await service.deleteBatch(Query("?id=in.[1,2,3]"));
+    final response = await client.deleteBatch(Query(query: "?id=in.[1,2,3]"));
     expect(response.count, equals(2));
   });
 }

@@ -70,7 +70,7 @@ abstract class Client<T> {
         "PrimaryKey `$primaryKey` not found in model!");
 
     final body = _payloadAsString(jsonObject);
-    final query = Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
+    final query = Query(query: "?$primaryKey=eq.${jsonObject[primaryKey]}");
     final response = await connection.patch(
         modelName: modelName,
         body: body,
@@ -99,7 +99,7 @@ abstract class Client<T> {
           "PrimaryKey `$primaryKey` not found in model!");
     }
 
-    query = query ?? Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
+    query = query ?? Query(query: "?$primaryKey=eq.${jsonObject[primaryKey]}");
     final response = await connection.patch(
         modelName: modelName,
         body: body,
@@ -115,7 +115,7 @@ abstract class Client<T> {
     assert(jsonObject.containsKey(primaryKey),
         "PrimaryKey `$primaryKey` not found in model!");
 
-    final query = Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
+    final query = Query(query: "?$primaryKey=eq.${jsonObject[primaryKey]}");
     final response = await connection.delete(
         modelName: modelName, query: query, prefer: prefer);
     return _buildResponse(response);
@@ -145,14 +145,13 @@ abstract class Client<T> {
 
     // create models and jsonObjects
     List<T> models = [];
-    final jsonObjects = await response.jsonObject(_lastBody!);
+    final json = await response.jsonObject(_lastBody!);
 
-    for (final obj in jsonObjects) {
+    for (final obj in json) {
       models.add(fromJson(obj));
     }
 
-    return Response<T>(
-        response: response, jsonObjects: jsonObjects, models: models);
+    return Response<T>(response: response, json: json, models: models);
   }
 
   // helpers

@@ -32,7 +32,7 @@ void main() {
     final testConnection = makeTestConnection(mockClient);
 
     await testConnection.delete(
-        modelName: "MockClass", query: Query("?id=eq.1"));
+        modelName: "MockClass", query: Query(query: "?id=eq.1"));
   });
 
   test('ConnectionGet', () async {
@@ -46,7 +46,8 @@ void main() {
     });
 
     final testConnection = makeTestConnection(mockClient);
-    await testConnection.get(modelName: "MockClass", query: Query("?id=eq.1"));
+    await testConnection.get(
+        modelName: "MockClass", query: Query(query: "?id=eq.1"));
   });
 
   test('ConnectionHead', () async {
