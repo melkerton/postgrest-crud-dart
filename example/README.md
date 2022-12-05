@@ -7,7 +7,7 @@ Copy config.sample.yaml to config.yaml and update as needed. (The defaults provi
 Then use either the [Mock Server Setup](#mock-server-setup) or the
 [Database Setup](#database-setup).
 
-### Mock Server Setup (#mock-server-setup)
+### Mock Server Setup
 
 The simple example provided uses [node-mock-server](https://www.npmjs.com/package/node-mock-server) to provide a mock service. Run `node mock` from this directory
 to start the mock server.
@@ -17,7 +17,9 @@ $ npm install
 $ node mock
 ```
 
-### Database Setup (#database-setup)
+-   Only a single GET endpoint is configured to return two records.
+
+### Database Setup
 
 The migrations under `database/` can be used to create a Postgresql schema to be used with this example. See [yoyo-migrations](https://pypi.org/project/yoyo-migrations/) for confiuration. A sample configuration is provided `database/yoyo.sample.ini`.
 
@@ -32,4 +34,11 @@ $ yoyo apply
 ```
 
 -   `yoyo apply` Assumes correct configuration has been created.
+
+### Run Application
+
+```
+$ dart run example.dart
+```
+
 -   All relative paths assume from `pkg-root/example` unless otherwise specified.
