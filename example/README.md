@@ -12,6 +12,24 @@ Then use either the [Mock Server Setup](#mock-server-setup) or the
 The simple example provided uses [node-mock-server](https://www.npmjs.com/package/node-mock-server) to provide a mock service. Run `node mock` from this directory
 to start the mock server.
 
+```
+$ npm install
+$ node mock
+```
+
 ### Database Setup (#database-setup)
 
-The migrations under `database/` can be used to create a Postgresql schema to be used with this example. Uses [yoyo-migrations](https://pypi.org/project/yoyo-migrations/) to manage migrations.
+The migrations under `database/` can be used to create a Postgresql schema to be used with this example. See [yoyo-migrations](https://pypi.org/project/yoyo-migrations/) for confiuration. A sample configuration is provided `database/yoyo.sample.ini`.
+
+```
+$ cd database
+$ python3 -m pip install virtualenv
+$ python3 -m venv .env
+$ source ./env/bin/activate
+$ pip install -U pip
+$ pip install -r requirements.txt
+$ yoyo apply
+```
+
+-   `yoyo apply` Assumes correct configuration has been created.
+-   All relative paths assume from `pkg-root/example` unless otherwise specified.
