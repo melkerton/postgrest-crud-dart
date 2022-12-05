@@ -101,4 +101,4 @@ void main () async {
 
 ```
 
-See [example/](/tree/main/example) folder for a more detailed example including a mock server and Postgresql migrations for database setup.
+See [example/](tree/main/example) folder for a more detailed example including a mock server and Postgresql migrations for database setup.
