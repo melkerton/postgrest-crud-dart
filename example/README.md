@@ -5,7 +5,7 @@
 Copy config.sample.yaml to config.yaml and update as needed. (The defaults provided will work with the Mock Server setup.)
 
 Then use either the [Mock Server Setup](#mock-server-setup) or the
-[Database Setup](#database-setup).
+[Database Setup](#database-setup) to provide the data service.
 
 ### Mock Server Setup
 

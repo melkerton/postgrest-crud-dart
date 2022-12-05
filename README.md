@@ -35,14 +35,14 @@ The secondary reason for this package is to abstract the conversion process betw
 
 ## Setup
 
--   Create a class (`CLASS`) that represents a table in your PostgreSQL database.
+-   Create a class (`Class`) that represents a table in your PostgreSQL database.
     -   The only requirement is that it has at least one property that represents a primary key.
--   Create a class (`CLIENT<CLASS>`) that extends `Client<CLASS>`.
-    -   Override modelName, primaryKey, toJson, and fromJson.
-    -   The package [json_serializable](https://pub.dev/packages/json_serializable) is useful for building toJson and fromJson methods from a class.
--   Instantiate a PostrestConfig object to connect your database.
--   Instantiate a Connection object with a PostgrestConfig object.
--   Instantiate `CLIENT<CLASS>` with a Connection object.
+-   Create a class (`ClientClass`) that extends `Client<Class>`.
+    -   Override `modelName`, `primaryKey`, `toJson`, and `fromJson`.
+    -   The package [json_serializable](https://pub.dev/packages/json_serializable) is useful for building `toJson` and `fromJson` methods from a class.
+-   Instantiate a `PostrestConfig` object to connect your database.
+-   Instantiate a `Connection` object with a `PostgrestConfig` object.
+-   Instantiate `ClientClass` with a `Connection` object.
 
 ## Example
 
@@ -50,13 +50,13 @@ The secondary reason for this package is to abstract the conversion process betw
 
 import 'package:postgrest_crud/postgrest_crud.dart';
 
-// CLASS
+// Class
 class Widget {
     int id;
     Widget({this.id})
 }
 
-// CLIENT<CLASS>
+// ClientClass
 class WidgetClient extends Client<Widget> {
     @override
     String get modelName => "widget";
@@ -84,7 +84,7 @@ void main () async {
     // Connection
     final connection = Connection(postgrestConfig: postgrestConfig);
 
-    // CLIENT<CLASS>
+    // ClientClass
     final client = TodoClient(connection: connection);
 
     // request records
@@ -101,4 +101,4 @@ void main () async {
 
 ```
 
-See [example/](https://github.com/KernlAnnik/postgrest-crud-dart/tree/main/example) folder for a more detailed example including mock testing methods (TODO).
+See [example/](/tree/main/example) folder for a more detailed example including a mock server and Postgresql migrations for database setup.
