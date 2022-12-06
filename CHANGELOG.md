@@ -1,3 +1,8 @@
+## 0.1.8-dev.1
+
+-   Support for RPC commands.
+-   Implement a `Type` check for filters.
+
 ## 0.1.7-dev.1
 
 -   Rough in all Filter constructors (isEq, isGt, etc).

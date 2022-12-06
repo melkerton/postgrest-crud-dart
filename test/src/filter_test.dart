@@ -2,6 +2,8 @@
 import 'package:test/test.dart';
 import 'package:postgrest_crud/postgrest_crud.dart';
 
+class Alpha {}
+
 main() {
   test('FilterBase', () {
     expect(Filter.isEq("a", "b").toString(), equals("eq.b"));
@@ -9,6 +11,7 @@ main() {
 
     expect(Filter.isEq("a", "b").toString(), equals("eq.b"));
     expect(Filter.isEq("a", "b").toString(nested: true), equals("a.eq.b"));
+    //print(Filter.isEq("id", Alpha()).toString());
   });
 
   test('FilterCheckOperators', () {
@@ -22,17 +25,24 @@ main() {
     expect(Filter.isILike("a", "b%").toString(), equals("ilike.b*"));
     expect(Filter.isMatch("a", "b").toString(), equals("match.b"));
     expect(Filter.isIMatch("a", "b").toString(), equals("imatch.b"));
+    expect(Filter.isIn("a", "(b)").toString(), equals("in.(b)"));
+    expect(Filter.isIn("a", ['b', 'c']).toString(), equals("in.(b%2Cc)"));
+    expect(Filter.isIs("a", "b").toString(), equals("is.b"));
     expect(Filter.isFts("a", "b").toString(), equals("fts.b"));
     expect(Filter.isPlfts("a", "b").toString(), equals("plfts.b"));
     expect(Filter.isPhfts("a", "b").toString(), equals("phfts.b"));
     expect(Filter.isWfts("a", "b").toString(), equals("wfts.b"));
     expect(Filter.isCs("a", "b").toString(), equals("cs.b"));
+    expect(Filter.isCs("a", ['b', 'c']).toString(), equals("cs.%7Bb%2Cc%7D"));
     expect(Filter.isCd("a", "b").toString(), equals("cd.b"));
+    expect(Filter.isCd("a", ['b', 'c']).toString(), equals("cd.%7Bb%2Cc%7D"));
     expect(Filter.isOv("a", "b").toString(), equals("ov.b"));
     expect(Filter.isSl("a", "b").toString(), equals("sl.b"));
+    expect(Filter.isSl("a", ['b', 'c']).toString(), equals("sl.(b%2Cc)"));
     expect(Filter.isSr("a", "b").toString(), equals("sr.b"));
-    expect(Filter.isNxl("a", "b").toString(), equals("nxl.b"));
     expect(Filter.isNxr("a", "b").toString(), equals("nxr.b"));
+    expect(Filter.isNxr("a", ['b', 'c']).toString(), equals("nxr.(b%2Cc)"));
+    expect(Filter.isNxl("a", "b").toString(), equals("nxl.b"));
     expect(Filter.isAdj("a", "b").toString(), equals("adj.b"));
   });
 
@@ -59,6 +69,9 @@ main() {
 
     expect(Filter.isMatch("a", "b", negated: true).toString(),
         equals("not.match.b"));
+
+    expect(Filter.isIn("a", "b", negated: true).toString(), equals("not.in.b"));
+    expect(Filter.isIs("a", "b", negated: true).toString(), equals("not.is.b"));
 
     expect(Filter.isIMatch("a", "b", negated: true).toString(),
         equals("not.imatch.b"));

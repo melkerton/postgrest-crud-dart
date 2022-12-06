@@ -1,6 +1,6 @@
 name: postgrest_crud
 description: A Postgrest client that provides create, recall, update, and delete operations with support for batch operations via createBatch, updateBatch, and deleteBatch.
-version: 0.1.7-dev.1
+version: 0.1.8-dev.1
 repository: https://github.com/melkerton/postgrest-crud-dart
 
 environment:

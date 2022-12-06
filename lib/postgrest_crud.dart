@@ -5,7 +5,7 @@ export 'src/client.dart';
 export 'src/config.dart';
 export 'src/connection.dart';
 export 'src/exception.dart';
-export 'src/filter.dart';
+export 'src/filter.dart' show Filter;
 export 'src/http.dart';
 export 'src/prefer.dart';
 export 'src/query.dart';

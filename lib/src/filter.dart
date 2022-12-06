@@ -20,7 +20,8 @@ class Filter {
   final bool negated;
 
   /// Creates a `Filter` for use with `Query`. Prefer using static methods.
-  Filter(this.column, this.operator, this.value, this.negated);
+  Filter(this.column, this.operator, String value, this.negated)
+      : value = value.toUrlEncoded();
 
   /// Returns a context based string (rhs) of query.
   ///
@@ -42,119 +43,133 @@ class Filter {
 
   /// Postgresql: `=`, meaning: equals.
   static Filter isEq(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "eq", "$value".toUrlEncoded(), negated);
+      Filter(column, "eq", dynamicToString(value), negated);
 
   /// Postgresql: `>`, meaning: greater than.
   static Filter isGt(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "gt", "$value".toUrlEncoded(), negated);
+      Filter(column, "gt", dynamicToString(value), negated);
 
   /// Postgresql: `>=`, meaning: greater than or equal.
   static Filter isGte(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "gte", "$value".toUrlEncoded(), negated);
+      Filter(column, "gte", dynamicToString(value), negated);
 
   /// Postgresql: `<`, meaning: less than.
   static Filter isLt(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "lt", "$value".toUrlEncoded(), negated);
+      Filter(column, "lt", dynamicToString(value), negated);
 
   /// Postgresql: `<=`, meaning: less than or equal.
   static Filter isLte(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "lte", "$value".toUrlEncoded(), negated);
+      Filter(column, "lte", dynamicToString(value), negated);
 
   /// Postgresql: `<>` or `!=`, meaning: not equal.
   static Filter isNeq(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "neq", "$value".toUrlEncoded(), negated);
+      Filter(column, "neq", dynamicToString(value), negated);
 
   /// Postgresql: `LIKE`, meaning: LIKE operator.
   ///
   /// Replaces `%` with `*`, (to avoid
   /// [URL encoding](https://en.wikipedia.org/wiki/Percent-encoding)
   /// you can use `*` as an alias of the percent sign `%` for the pattern).
-  static Filter isLike(String column, dynamic value, {bool negated = false}) {
-    value = "$value".replaceAll('%', '*');
-    return Filter(column, "like", "$value".toUrlEncoded(), negated);
-  }
+  static Filter isLike(String column, dynamic value, {bool negated = false}) =>
+      Filter(
+          column, "like", dynamicToString(value).replaceAll('%', '*'), negated);
 
   /// Postgresql: `ILIKE`, meaning: ILIKE operator.
   ///
   /// Replaces `%` with `*`, (to avoid
   /// [URL encoding](https://en.wikipedia.org/wiki/Percent-encoding)
   /// you can use `*` as an alias of the percent sign `%` for the pattern).
-  static Filter isILike(String column, dynamic value, {bool negated = false}) {
-    value = "$value".replaceAll('%', '*');
-    return Filter(column, "ilike", "$value".toUrlEncoded(), negated);
-  }
+  static Filter isILike(String column, dynamic value, {bool negated = false}) =>
+      Filter(column, "ilike", dynamicToString(value).replaceAll('%', '*'),
+          negated);
 
   /// Postgresql: `~`, meaning: ~ operator, see [Pattern Matching](https://postgrest.org/en/stable/api.html#pattern-matching).
   static Filter isMatch(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "match", "$value".toUrlEncoded(), negated);
+      Filter(column, "match", dynamicToString(value), negated);
 
   /// Postgresql: `~*`, meaning: ~ operator, see [Pattern Matching](https://postgrest.org/en/stable/api.html#pattern-matching).
   static Filter isIMatch(String column, dynamic value,
           {bool negated = false}) =>
-      Filter(column, "imatch", "$value".toUrlEncoded(), negated);
+      Filter(column, "imatch", dynamicToString(value), negated);
 
   /// Postgresql: `IN`, meaning: one of a list of values.
   ///
   /// e.g. ?a=in.(1,2,3) – also supports commas in quoted strings like `?a=in.("hi,there","yes,you")`.
   static Filter isIn(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "in", "$value".toUrlEncoded(), negated);
+      Filter(column, "in", dynamicToString(value), negated);
 
   /// Postgresql: `IS`, meaning: checking for exact equality `(null,true,false,unknown)`.
   static Filter isIs(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "is", "$value".toUrlEncoded(), negated);
+      Filter(column, "is", dynamicToString(value), negated);
 
   /// Postgresql: `@@`, meaning: [Full-Text](https://postgrest.org/en/stable/api.html#fts)
   /// Search using to_tsquery.
   static Filter isFts(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "fts", "$value".toUrlEncoded(), negated);
+      Filter(column, "fts", dynamicToString(value), negated);
 
   /// Postgresql: `@@`, meaning: [Full-Text](https://postgrest.org/en/stable/api.html#fts)
   /// Search using plainto_tsquery.
   static Filter isPlfts(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "plfts", "$value".toUrlEncoded(), negated);
+      Filter(column, "plfts", dynamicToString(value), negated);
 
   /// Postgresql: `@@`, meaning: [Full-Text](https://postgrest.org/en/stable/api.html#fts)
   /// Search using phraseto_tsquery.
   static Filter isPhfts(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "phfts", "$value".toUrlEncoded(), negated);
+      Filter(column, "phfts", dynamicToString(value), negated);
 
   /// Postgresql: `@@`, meaning: [Full-Text](https://postgrest.org/en/stable/api.html#fts)
   /// Search using websearch_to_tsquery.
   static Filter isWfts(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "wfts", "$value".toUrlEncoded(), negated);
+      Filter(column, "wfts", dynamicToString(value), negated);
 
   /// Postgresql: `@>`, meaning: contains e.g. `?tags=cs.{example, new}`.
   static Filter isCs(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "cs", "$value".toUrlEncoded(), negated);
+      Filter(column, "cs",
+          dynamicToString(value, leftDelim: '{', rightDelim: '}'), negated);
 
   /// Postgresql: `<@`, meaning: contained in e.g. `?values=cd.{1,2,3}`.
   static Filter isCd(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "cd", "$value".toUrlEncoded(), negated);
+      Filter(column, "cd",
+          dynamicToString(value, leftDelim: '{', rightDelim: '}'), negated);
 
   /// Postgresql: `&&`, meaning: overlap (have points in common).
   ///
   /// e.g. `?period=ov.[2017-01-01,2017-06-30]` – also supports array types,
   /// use curly braces instead of square brackets e.g. :code: `?arr=ov.{1,3}`.
   static Filter isOv(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "ov", "$value".toUrlEncoded(), negated);
+      Filter(column, "ov", dynamicToString(value), negated);
 
   /// Postgresql: `<<`, meaning: strictly left of, e.g. `?range=sl.(1,10)`.
   static Filter isSl(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "sl", "$value".toUrlEncoded(), negated);
+      Filter(column, "sl", dynamicToString(value), negated);
 
   /// Postgresql: `>>`, meaning: strictly right of.
   static Filter isSr(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "sr", "$value".toUrlEncoded(), negated);
+      Filter(column, "sr", dynamicToString(value), negated);
 
   /// Postgresql: `&<`, meaning: does not extend to the right of, e.g. `?range=nxr.(1,10)`.
   static Filter isNxr(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "nxr", "$value".toUrlEncoded(), negated);
+      Filter(column, "nxr", dynamicToString(value), negated);
 
   /// Postgresql: `&>`, meaning: does not extend to the left of.
   static Filter isNxl(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "nxl", "$value".toUrlEncoded(), negated);
+      Filter(column, "nxl", dynamicToString(value), negated);
 
   /// Postgresql: `-|-`, meaning: is adjacent to, e.g. `?range=adj.(1,10)`.
   static Filter isAdj(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "adj", "$value".toUrlEncoded(), negated);
+      Filter(column, "adj", dynamicToString(value), negated);
+}
+
+String dynamicToString(dynamic value, {String? leftDelim, String? rightDelim}) {
+  try {
+    if (value is List) {
+      leftDelim = leftDelim ?? "(";
+      rightDelim = rightDelim ?? ")";
+      return "$leftDelim${value.map((v) => v.toString()).toList().join(',')}$rightDelim";
+    }
+
+    return value.toString();
+  } on NoSuchMethodError {
+    throw PostgrestCrudException("Filter values must support `toString()`.");
+  }
 }

@@ -26,8 +26,6 @@ The secondary reason for this package is to abstract the conversion process betw
 
 ### Roadmap
 
--   Implement a `Type` check for filters.
--   Support for RPC commands.
 -   Add support for Compound query operations e.g. (and=(a=b,or=(c=d)))
 -   Add flexible logging facility.
 -   Review bearerToken implementation, possibly add an auth method to Connection.
