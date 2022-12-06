@@ -20,6 +20,8 @@ class Filter {
   final bool negated;
 
   /// Creates a `Filter` for use with `Query`. Prefer using static methods.
+  ///
+  /// Setting `negated = true` prefixes operator with `not`.
   Filter(this.column, this.operator, String value, this.negated)
       : value = value.toUrlEncoded();
 
@@ -95,6 +97,7 @@ class Filter {
   /// Postgresql: `IN`, meaning: one of a list of values.
   ///
   /// e.g. ?a=in.(1,2,3) – also supports commas in quoted strings like `?a=in.("hi,there","yes,you")`.
+  /// Passing a value as a `List` will generate the correct format.
   static Filter isIn(String column, dynamic value, {bool negated = false}) =>
       Filter(column, "in", dynamicToString(value), negated);
 
@@ -122,12 +125,17 @@ class Filter {
   static Filter isWfts(String column, dynamic value, {bool negated = false}) =>
       Filter(column, "wfts", dynamicToString(value), negated);
 
+  /// Passing a value as a `List` will generate the correct format.
+  ///
   /// Postgresql: `@>`, meaning: contains e.g. `?tags=cs.{example, new}`.
   static Filter isCs(String column, dynamic value, {bool negated = false}) =>
       Filter(column, "cs",
           dynamicToString(value, leftDelim: '{', rightDelim: '}'), negated);
 
+  /// Passing a value as a `List` will generate the correct format.
+  ///
   /// Postgresql: `<@`, meaning: contained in e.g. `?values=cd.{1,2,3}`.
+  /// Passing a value as a `List` will generate the correct format.
   static Filter isCd(String column, dynamic value, {bool negated = false}) =>
       Filter(column, "cd",
           dynamicToString(value, leftDelim: '{', rightDelim: '}'), negated);
@@ -136,10 +144,14 @@ class Filter {
   ///
   /// e.g. `?period=ov.[2017-01-01,2017-06-30]` – also supports array types,
   /// use curly braces instead of square brackets e.g. :code: `?arr=ov.{1,3}`.
+  /// Passing a value as a `List` will generate the correct format.
   static Filter isOv(String column, dynamic value, {bool negated = false}) =>
-      Filter(column, "ov", dynamicToString(value), negated);
+      Filter(column, "ov",
+          dynamicToString(value, leftDelim: '[', rightDelim: ']'), negated);
 
   /// Postgresql: `<<`, meaning: strictly left of, e.g. `?range=sl.(1,10)`.
+  ///
+  /// Passing a value as a `List` will generate the correct format.
   static Filter isSl(String column, dynamic value, {bool negated = false}) =>
       Filter(column, "sl", dynamicToString(value), negated);
 
@@ -148,14 +160,20 @@ class Filter {
       Filter(column, "sr", dynamicToString(value), negated);
 
   /// Postgresql: `&<`, meaning: does not extend to the right of, e.g. `?range=nxr.(1,10)`.
+  ///
+  /// Passing a value as a `List` will generate the correct format.
   static Filter isNxr(String column, dynamic value, {bool negated = false}) =>
       Filter(column, "nxr", dynamicToString(value), negated);
 
-  /// Postgresql: `&>`, meaning: does not extend to the left of.
+  /// Postgresql: `&>`, meaning: does not extend to the left of, e.g. `?range=nxl.(1,10)`.
+  ///
+  /// Passing a value as a `List` will generate the correct format.
   static Filter isNxl(String column, dynamic value, {bool negated = false}) =>
       Filter(column, "nxl", dynamicToString(value), negated);
 
   /// Postgresql: `-|-`, meaning: is adjacent to, e.g. `?range=adj.(1,10)`.
+  ///
+  /// Passing a value as a `List` will generate the correct format.
   static Filter isAdj(String column, dynamic value, {bool negated = false}) =>
       Filter(column, "adj", dynamicToString(value), negated);
 }

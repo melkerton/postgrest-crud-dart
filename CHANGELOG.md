@@ -2,6 +2,7 @@
 
 -   Support for RPC commands.
 -   Implement a `Type` check for filters.
+-   Review character encoding handling for Query. Handle encoding as early as possible.
 
 ## 0.1.7-dev.1
 

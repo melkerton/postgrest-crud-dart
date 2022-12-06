@@ -1,5 +1,6 @@
 import 'package:postgrest_crud/postgrest_crud.dart';
 
+/// Creates a `Query` that generates a URL query string.
 class Query {
   // Sets limit for query.
   int _limit = 0;

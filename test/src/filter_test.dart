@@ -37,13 +37,16 @@ main() {
     expect(Filter.isCd("a", "b").toString(), equals("cd.b"));
     expect(Filter.isCd("a", ['b', 'c']).toString(), equals("cd.%7Bb%2Cc%7D"));
     expect(Filter.isOv("a", "b").toString(), equals("ov.b"));
+    expect(Filter.isOv("a", ['b', 'c']).toString(), equals("ov.%5Bb%2Cc%5D"));
     expect(Filter.isSl("a", "b").toString(), equals("sl.b"));
     expect(Filter.isSl("a", ['b', 'c']).toString(), equals("sl.(b%2Cc)"));
     expect(Filter.isSr("a", "b").toString(), equals("sr.b"));
     expect(Filter.isNxr("a", "b").toString(), equals("nxr.b"));
     expect(Filter.isNxr("a", ['b', 'c']).toString(), equals("nxr.(b%2Cc)"));
     expect(Filter.isNxl("a", "b").toString(), equals("nxl.b"));
+    expect(Filter.isNxl("a", ['b', 'c']).toString(), equals("nxl.(b%2Cc)"));
     expect(Filter.isAdj("a", "b").toString(), equals("adj.b"));
+    expect(Filter.isAdj("a", ['b', 'c']).toString(), equals("adj.(b%2Cc)"));
   });
 
   test('FilterCheckNegatedOperators', () {
