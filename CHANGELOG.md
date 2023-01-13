@@ -1,3 +1,23 @@
+## 0.1.9-dev.1
+
+-   rename Connection.sendRequest param modelName
+
+## 0.1.8-dev.1
+
+-   Support for RPC commands.
+-   Implement a `Type` check for filters.
+-   Review character encoding handling for Query. Handle encoding as early as possible.
+
+## 0.1.7-dev.1
+
+-   Rough in all Filter constructors (isEq, isGt, etc).
+-   All `Filter` constructors accepts `dynamic` values, will add `Type` support in future.
+-   Transition to node-mock-server for the example.
+
+## 0.1.6-dev.1
+
+-   Made jsonObjects available in `Response` (jinja renderMap requirements).
+
 ## 0.1.5-dev.1
 
 -   Fix example/example.dart, update to new identifiers (Database to Connection, etc).

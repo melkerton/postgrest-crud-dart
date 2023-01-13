@@ -1,5 +1,5 @@
 import 'dart:core';
-
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:postgrest_crud/postgrest_crud.dart';
 
@@ -100,8 +100,18 @@ class Connection {
         body: body);
   }
 
-  /// Send an rpc command with arguments. `IN DEV`.
-  void rpc() {}
+  /// Send an rpc command with arguments.
+  ///
+  /// See [Stored Procedures](https://postgrest.org/en/stable/api.html#stored-procedures)
+  Future<dynamic> rpc(
+      {required String function,
+      required Map<String, dynamic> arguments}) async {
+    final response = await sendRequest(
+        method: HttpMethod.post,
+        modelName: "rpc/$function",
+        body: json.encode(arguments));
+    return json.decode(await response.bodyToString);
+  }
 
   /// Builds and sends the final request, returning a Future http.StreamedResponse.
   Future<http.StreamedResponse> sendRequest(
@@ -134,8 +144,6 @@ class Connection {
       request.headers['Authorization'] =
           "Bearer ${postgrestConfig.bearerToken}";
     }
-
-    // application
 
     // body
     if (body != null) {

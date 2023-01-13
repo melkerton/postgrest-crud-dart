@@ -32,7 +32,7 @@ void main() {
     final testConnection = makeTestConnection(mockClient);
 
     await testConnection.delete(
-        modelName: "MockClass", query: Query("?id=eq.1"));
+        modelName: "MockClass", query: Query(query: "?id=eq.1"));
   });
 
   test('ConnectionGet', () async {
@@ -46,7 +46,8 @@ void main() {
     });
 
     final testConnection = makeTestConnection(mockClient);
-    await testConnection.get(modelName: "MockClass", query: Query("?id=eq.1"));
+    await testConnection.get(
+        modelName: "MockClass", query: Query(query: "?id=eq.1"));
   });
 
   test('ConnectionHead', () async {
@@ -105,5 +106,23 @@ void main() {
 
     final testConnection = makeTestConnection(mockClient);
     await testConnection.put(modelName: "MockClass", body: '{"id": 1}');
+  });
+
+  test('ConnectRpc', () async {
+    final mockClient = testMockClient(
+        body: '{"alpha":1}',
+        preResponse: (Request request) {
+          expect(request.method, equals(HttpMethod.post.name));
+          expect(
+              request.url, equals(Uri.parse("http://localhost/rpc/MockClass")));
+
+          expect(request.body, equals('{"a":1}'));
+        });
+
+    final testConnection = makeTestConnection(mockClient);
+    final results =
+        await testConnection.rpc(function: "MockClass", arguments: {"a": 1});
+    expect(results, isA<Map<String, dynamic>>());
+    expect(results['alpha'], equals(1));
   });
 }

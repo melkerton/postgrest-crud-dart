@@ -70,7 +70,7 @@ abstract class Client<T> {
         "PrimaryKey `$primaryKey` not found in model!");
 
     final body = _payloadAsString(jsonObject);
-    final query = Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
+    final query = Query(query: "?$primaryKey=eq.${jsonObject[primaryKey]}");
     final response = await connection.patch(
         modelName: modelName,
         body: body,
@@ -79,7 +79,7 @@ abstract class Client<T> {
     return _buildResponse(response);
   }
 
-  /// Performs an upsert with resolution=ignore-duplicates
+  /// Performs an upsert with resolution=merge-duplicates
   Future<Response<T>> updateBatch(List<T> models) async {
     final body = _payloadAsString(models);
     PostgrestPrefer prefer = PostgrestPrefer(
@@ -99,7 +99,7 @@ abstract class Client<T> {
           "PrimaryKey `$primaryKey` not found in model!");
     }
 
-    query = query ?? Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
+    query = query ?? Query(query: "?$primaryKey=eq.${jsonObject[primaryKey]}");
     final response = await connection.patch(
         modelName: modelName,
         body: body,
@@ -115,7 +115,7 @@ abstract class Client<T> {
     assert(jsonObject.containsKey(primaryKey),
         "PrimaryKey `$primaryKey` not found in model!");
 
-    final query = Query("?$primaryKey=eq.${jsonObject[primaryKey]}");
+    final query = Query(query: "?$primaryKey=eq.${jsonObject[primaryKey]}");
     final response = await connection.delete(
         modelName: modelName, query: query, prefer: prefer);
     return _buildResponse(response);
@@ -132,14 +132,26 @@ abstract class Client<T> {
   }
 
   Future<Response<T>> _buildResponse(http.StreamedResponse response) async {
+    // ensure valid status code
     if (response.statusCode < 200 || response.statusCode > 299) {
       throw PostgrestCrudException(
           "${response.reasonPhrase} (${response.statusCode})",
           response: response);
     }
 
-    final models = await _responseToClients(response);
-    return Response<T>(response: response, models: models);
+    // store last* data
+    _lastResponse = response;
+    _lastBody = await response.bodyToString;
+
+    // create models and jsonObjects
+    List<T> models = [];
+    final json = await response.jsonObject(_lastBody!);
+
+    for (final obj in json) {
+      models.add(fromJson(obj));
+    }
+
+    return Response<T>(response: response, json: json, models: models);
   }
 
   // helpers
@@ -153,19 +165,5 @@ abstract class Client<T> {
     } else {
       throw Error();
     }
-  }
-
-  Future<List<T>> _responseToClients(http.StreamedResponse response) async {
-    _lastResponse = response;
-    _lastBody = await response.bodyToString;
-
-    List<T> list = [];
-    final jsonList = await response.jsonObject(_lastBody!);
-
-    for (final obj in jsonList) {
-      list.add(fromJson(obj));
-    }
-
-    return list;
   }
 }

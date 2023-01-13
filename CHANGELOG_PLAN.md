@@ -1,4 +1,0 @@
--   Support for RPC commands.
--   Complete the Query system.
--   Add flexible logging facility
--   Review bearerToken implementation, possibly add an auth method to Connection.
