@@ -79,7 +79,7 @@ abstract class Client<T> {
     return _buildResponse(response);
   }
 
-  /// Performs an upsert with resolution=ignore-duplicates
+  /// Performs an upsert with resolution=merge-duplicates
   Future<Response<T>> updateBatch(List<T> models) async {
     final body = _payloadAsString(models);
     PostgrestPrefer prefer = PostgrestPrefer(

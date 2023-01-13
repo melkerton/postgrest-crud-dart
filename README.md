@@ -26,7 +26,7 @@ The secondary reason for this package is to abstract the conversion process betw
 
 ### Roadmap
 
--   Add support for Compound query operations e.g. (and=(a=b,or=(c=d)))
+-   Add support for Compound query operations e.g. ?and=(a.eq.b,or(c.eq.d))
 -   Add flexible logging facility.
 -   Review bearerToken implementation, possibly add an auth method to Connection.
 
